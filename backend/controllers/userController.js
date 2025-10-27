@@ -14,9 +14,9 @@ exports.deleteUser = async (req, res) => {
     try {
         const deletedUser = await user.findByIdAndDelete(req.params.id);
         if (!deletedUser) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Usuario nao encontrado' });
         }
-        res.status(200).json({ message: 'User deleted successfully' });
+        res.status(200).json({ message: 'Usuario deletado com sucesso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -26,7 +26,7 @@ exports.updateUser = async (req, res) => {
     try {
         const updatedUser = await user.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'Usuario nao encontrado' });
         }
         res.status(200).json(updatedUser);
     } catch (error) {
