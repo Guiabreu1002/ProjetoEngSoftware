@@ -42,3 +42,28 @@ exports.deleteTask = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.atualizarPosicao = async (req, res) => {
+    try {
+        const { taskId, membroId, novaPosicao } = req.body;
+        const task = await Task.findById(taskId);
+        if (!task) 
+            return res.status(404).json({ message: 'Task não encontrada' });
+
+        // atualiza a ordem
+        task.ordem = novaPosicao;
+
+        // mover o membro para a primeira posição (remove se existir e adiciona no início)
+        const membroIdStr = membroId && membroId.toString ? membroId.toString() : String(membroId);
+        const idx = task.membros.findIndex(m => m && m.toString() === membroIdStr);
+        if (idx > -1) task.membros.splice(idx, 1);
+        task.membros.unshift(membroId);
+
+        // salva alterações
+        await task.save();
+
+        res.json({ success: true, task });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
