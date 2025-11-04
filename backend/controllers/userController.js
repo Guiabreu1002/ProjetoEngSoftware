@@ -1,12 +1,14 @@
 const user = require('../schema/userSchema');
+const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
     try {
-        const newUser = new user(req.body);
-        const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+        const user = new User(req.body);
+        await user.save();
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        return res.status(201).json({ user, verificationToken: token });
+    } catch (err) {
+        return res.status(400).json({ message: err.message });
     }
 };
 

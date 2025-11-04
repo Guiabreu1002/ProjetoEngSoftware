@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./db/conection.js'); 
 const taskRouters = require('./routers/taskRouters.js'); 
 const userRouters = require('./routers/userRouters.js');
+const auth = require('./middlewares/auth.js');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,9 +18,8 @@ app.use(express.json());
 connectDB();
 
 // Rotas
-app.use('/api/tasks', taskRouters);
+app.use('/api/tasks',auth, taskRouters);
 app.use('/api/users', userRouters);
-
 // Iniciar o servidor
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
